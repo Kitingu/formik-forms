@@ -1,8 +1,20 @@
 import React from "react";
-import { Formik, Field, Form } from "formik";
-import { TextField, Button, Checkbox,Radio } from "@material-ui/core";
+import { Formik, Field, Form, FieldAttributes, useField } from "formik";
+import {
+  TextField,
+  Button,
+  Checkbox,
+  Radio,
+  FormControlLabel
+} from "@material-ui/core";
 import "./App.css";
 
+type MyRadioProps = { label: string } & FieldAttributes<{}>;
+const MyRadio: React.FC<MyRadioProps> = ({ label, ...props }) => {
+  const [field] = useField(props);
+  // field.value
+  return <FormControlLabel {...field} control={<Radio />} label={label} />;
+};
 const App: React.FC = () => {
   return (
     <div>
@@ -14,7 +26,7 @@ const App: React.FC = () => {
           cookies: [],
           yoghurt: ""
         }}
-        onSubmit={async(data, { setSubmitting /*resetForm */ }) => {
+        onSubmit={async (data, { setSubmitting /*resetForm */ }) => {
           console.log(data);
           setSubmitting(false);
           // resetForm(false)
@@ -54,14 +66,22 @@ const App: React.FC = () => {
               value="choclate chip"
               as={Checkbox}
             />
+            {/* working with radio buttons */}
             <div>Yoghurt</div>
-            <Field
+            {/* <Field name="yoghurt" type="radio" value="Strawbery" as={Radio} /> */}
+            <MyRadio
               name="yoghurt"
               type="radio"
-              value="Strawbery"
-              as={Radio}
+              value="Strawberry"
+              label="Strawberry"
             />
-            <Field name="yoghurt" type="radio" value="Vanilla " as={Radio} />
+            <MyRadio
+              name="yoghurt"
+              type="radio"
+              value="Vanila"
+              label="Vanila"
+            />
+            <MyRadio name="yoghurt" type="radio" value="Mango" label="Mango" />
             <div>
               <Button disabled={isSubmitting} type="submit">
                 Submit
