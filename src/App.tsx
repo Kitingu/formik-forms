@@ -15,6 +15,19 @@ const MyRadio: React.FC<MyRadioProps> = ({ label, ...props }) => {
   // field.value
   return <FormControlLabel {...field} control={<Radio />} label={label} />;
 };
+
+// custom text field
+const MyTextField: React.FC<FieldAttributes<{}>> = ({
+  placeholder,
+  ...props
+}) => {
+  const [field, meta] = useField<{}>(props);
+  const errorText = meta.error && meta.touched ? meta.error : "";
+
+  return (
+    <TextField placeholder={placeholder} {...field} helperText={errorText} />
+  );
+};
 const App: React.FC = () => {
   return (
     <div>
@@ -34,12 +47,13 @@ const App: React.FC = () => {
       >
         {({ values, isSubmitting }) => (
           <Form>
-            <Field
+            <MyTextField
               placeholder="First Name"
               name="firstName"
               type="input"
-              as={TextField}
             />
+
+            
             <div>
               <Field
                 placeholder="Last Name"
