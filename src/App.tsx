@@ -25,13 +25,19 @@ const MyTextField: React.FC<FieldAttributes<{}>> = ({
   const errorText = meta.error && meta.touched ? meta.error : "";
 
   return (
-    <TextField placeholder={placeholder} {...field} helperText={errorText} />
+    <TextField
+      placeholder={placeholder}
+      {...field}
+      helperText={errorText}
+      error={!!errorText}
+    />
   );
 };
 const App: React.FC = () => {
   return (
     <div>
       <Formik
+        validateOnChange={true}
         initialValues={{
           firstName: "",
           lastName: "",
@@ -39,13 +45,20 @@ const App: React.FC = () => {
           cookies: [],
           yoghurt: ""
         }}
+        validate={values => {
+          const errors: Record<string, string> = {};
+          if (values.firstName.includes("bob")) {
+            errors.firstName = "Please input your first name";
+          }
+          return errors
+        }}
         onSubmit={async (data, { setSubmitting /*resetForm */ }) => {
           console.log(data);
           setSubmitting(false);
           // resetForm(false)
         }}
       >
-        {({ values, isSubmitting }) => (
+        {({ values, errors, isSubmitting }) => (
           <Form>
             <MyTextField
               placeholder="First Name"
@@ -53,7 +66,6 @@ const App: React.FC = () => {
               type="input"
             />
 
-            
             <div>
               <Field
                 placeholder="Last Name"
@@ -103,6 +115,7 @@ const App: React.FC = () => {
             </div>
 
             <pre> {JSON.stringify(values, null, 2)} </pre>
+            <pre> {JSON.stringify(errors, null, 2)} </pre>
           </Form>
         )}
       </Formik>
