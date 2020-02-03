@@ -160,6 +160,9 @@ const App: React.FC = () => {
                             <MenuItem value="dog">Dog </MenuItem>
                             <MenuItem value="chinchilla">Chinchilla </MenuItem>
                           </Field>
+                          <Button onClick={() => arrayHelpers.remove(index)}>
+                            Delete
+                          </Button>
                         </div>
                       );
                     })}
