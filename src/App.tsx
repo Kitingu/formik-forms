@@ -1,12 +1,22 @@
 import React from "react";
-import { Formik, Field, Form, FieldAttributes, useField } from "formik";
+import {
+  Formik,
+  Field,
+  FieldArray,
+  Form,
+  FieldAttributes,
+  useField
+} from "formik";
 import {
   TextField,
   Button,
   Checkbox,
   Radio,
-  FormControlLabel
+  FormControlLabel,
+  Select,
+  MenuItem
 } from "@material-ui/core";
+import * as yup from "yup";
 import "./App.css";
 
 type MyRadioProps = { label: string } & FieldAttributes<{}>;
@@ -33,6 +43,13 @@ const MyTextField: React.FC<FieldAttributes<{}>> = ({
     />
   );
 };
+
+const validationSchema = yup.object({
+  firstName: yup
+    .string()
+    .required()
+    .max(25)
+});
 const App: React.FC = () => {
   return (
     <div>
@@ -43,15 +60,17 @@ const App: React.FC = () => {
           lastName: "",
           isTall: false,
           cookies: [],
-          yoghurt: ""
+          yoghurt: "",
+          pets: [{ type: "cat", name: "sophia", id: "" + Math.random() }]
         }}
-        validate={values => {
-          const errors: Record<string, string> = {};
-          if (values.firstName.includes("bob")) {
-            errors.firstName = "Please input your first name";
-          }
-          return errors
-        }}
+        // validate={values => {
+        //   const errors: Record<string, string> = {};
+        //   if (values.firstName.includes("bob")) {
+        //     errors.firstName = "Please input your first name";
+        //   }
+        //   return errors
+        // }}
+        validationSchema={validationSchema}
         onSubmit={async (data, { setSubmitting /*resetForm */ }) => {
           console.log(data);
           setSubmitting(false);
@@ -109,6 +128,34 @@ const App: React.FC = () => {
             />
             <MyRadio name="yoghurt" type="radio" value="Mango" label="Mango" />
             <div>
+              <FieldArray name="pets">
+                {arrayHelpers => (
+                  <div>
+                    {values.pets.map((pet, index) => {
+                      // const name = `pets.${index}.name`;
+                      // pets.0.name
+                      return (
+                        <div key={pet.id}>
+                          <MyTextField
+                            placeholder="Pet Name"
+                            name={`pets.${index}.type`}
+                          />
+                          <Field
+                            name={`pets.${index}.name`}
+                            type="select"
+                            as={Select}
+                          >
+                            <MenuItem value="cat">Cat </MenuItem>
+                            <MenuItem value="dog">Dog </MenuItem>
+                            <MenuItem value="chinchilla">Chinchilla </MenuItem>
+                          </Field>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </FieldArray>
+
               <Button disabled={isSubmitting} type="submit">
                 Submit
               </Button>
