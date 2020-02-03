@@ -128,6 +128,9 @@ const App: React.FC = () => {
             />
             <MyRadio name="yoghurt" type="radio" value="Mango" label="Mango" />
             <div>
+              <Button>
+                
+              </Button>
               <FieldArray name="pets">
                 {arrayHelpers => (
                   <div>
