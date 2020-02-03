@@ -48,7 +48,12 @@ const validationSchema = yup.object({
   firstName: yup
     .string()
     .required()
-    .max(25)
+    .max(25),
+  pets: yup.array().of(
+    yup.object({
+      name: yup.string().required()
+    })
+  )
 });
 const App: React.FC = () => {
   return (
